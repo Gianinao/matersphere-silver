@@ -73,7 +73,7 @@ def calcular_risco(sentimento_score, idade, faltas_anteriores, dias_ate_consulta
     risco = 0
 
     if sentimento_score < -0.3:
-        risco += 30
+        risco += 20
     if idade >= 60:
         risco += 15
     if faltas_anteriores >= 2:
