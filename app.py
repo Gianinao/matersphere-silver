@@ -209,7 +209,9 @@ with col2:
             "acao_final": acao
         }])
 
-        st.session_state["resultado"] = resultado
+        if "historico" not in st.session_state:
+               st.session_state["historico"] = []
+        st.session_state["historico"].append(resultado)
 
     else:
         st.info("Preencha os dados do paciente e clique em analisar.")
@@ -219,8 +221,8 @@ with col2:
 st.markdown('<div class="info-card">', unsafe_allow_html=True)
 st.subheader("Registro da interação")
 
-if "resultado" in st.session_state:
-    resultado_df = st.session_state["resultado"]
+if "historico" in st.session_state and len(st.session_state["historico"]) > 0:
+    resultado_df = pd.concat(st.session_state["historico"], ignore_index=True)
     st.dataframe(resultado_df, use_container_width=True)
 
     csv = resultado_df.to_csv(index=False).encode("utf-8-sig")
