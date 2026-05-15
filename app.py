@@ -24,15 +24,42 @@ def analisar_sentimento(texto):
     if not texto or texto.strip() == "":
         return 0.0, "neutro"
 
-    blob = TextBlob(texto)
-    score = blob.sentiment.polarity
+    texto_lower = texto.lower()
 
-    if score > 0.1:
-        label = "positivo"
-    elif score < -0.1:
+    palavras_negativas = [
+        "não vou", "acho que não", "talvez não", "não sei",
+        "não consigo", "não conseguirei", "não acho que vou",
+        "inseguro", "insegura", "receoso", "receosa",
+        "preocupado", "preocupada", "medo", "ansioso", "ansiosa",
+        "dor", "cansado", "cansada", "difícil", "longe",
+        "esqueci", "não lembrava", "não lembrei"
+    ]
+
+    palavras_positivas = [
+        "tudo certo", "confirmado", "confirmar", "vou comparecer",
+        "estarei lá", "pode confirmar", "tranquilo", "tranquila",
+        "sem problema", "consigo ir", "irei amanhã"
+    ]
+
+    negativos_encontrados = [p for p in palavras_negativas if p in texto_lower]
+    positivos_encontrados = [p for p in palavras_positivas if p in texto_lower]
+
+    if len(negativos_encontrados) > 0:
+        score = -0.75
         label = "negativo"
+    elif len(positivos_encontrados) > 0:
+        score = 0.75
+        label = "positivo"
     else:
-        label = "neutro"
+        blob = TextBlob(texto)
+        score = blob.sentiment.polarity
+
+        if score > 0.1:
+            label = "positivo"
+        elif score < -0.1:
+            label = "negativo"
+        else:
+            label = "neutro"
 
     return score, label
 
